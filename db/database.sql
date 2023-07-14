@@ -1,0 +1,48 @@
+CREATE DATABASE PRUEBA;
+
+USE PRUEBA;
+
+CREATE TABLE Empleados(
+    id BIGINT(20) UNSIGNED PRIMARY KEY UNIQUE NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    puesto VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Categorias(
+    id BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(255) NOT NULL,
+    descripcion VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Premios(
+    id BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(255) NOT NULL,
+    descripcion VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Productos(
+    id BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(255) NOT NULL,
+    precio BIGINT(10) UNSIGNED NOT NULL,
+    descripcion VARCHAR(255) NULL,
+    categoria_id BIGINT(20) UNSIGNED NOT NULL,
+    CONSTRAINT fk_categoriaProducto FOREIGN KEY (categoria_id) REFERENCES Categorias(id)
+);
+
+CREATE TABLE Ventas(
+    id BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    producto_id BIGINT(20) UNSIGNED NOT NULL,
+    cantidad BIGINT(10) UNSIGNED NOT NULL,
+    fecha TIMESTAMP NOT NULL,
+    empleado_id BIGINT(20) UNSIGNED NOT NULL,
+    CONSTRAINT fk_ventasProducto FOREIGN KEY (producto_id) REFERENCES Productos(id),
+    CONSTRAINT fk_ventasEmpleado FOREIGN KEY (empleado_id) REFERENCES Empleados(id)
+);
+
+CREATE TABLE RegistroVentasEmpleado(
+    id BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    empleado_id BIGINT(20) UNSIGNED NOT NULL,
+    total_ventas BIGINT(20) UNSIGNED NOT NULL,
+    CONSTRAINT fk_registroEmpleado FOREIGN KEY (empleado_id) REFERENCES Empleados(id)
+);
+
