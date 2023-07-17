@@ -1,48 +1,81 @@
-CREATE DATABASE PRUEBA;
+CREATE DATABASE databaseStonksnt;
 
-USE PRUEBA;
+USE databaseStonksnt;
 
-CREATE TABLE Empleados(
-    id BIGINT(20) UNSIGNED PRIMARY KEY UNIQUE NOT NULL,
-    nombre VARCHAR(255) NOT NULL,
-    puesto VARCHAR(255) NOT NULL
+CREATE TABLE Categorías (
+    categoría_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripción VARCHAR(255)
 );
 
-CREATE TABLE Categorias(
-    id BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(255) NOT NULL,
-    descripcion VARCHAR(255) NOT NULL
+
+CREATE TABLE Productos (
+    producto_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
+    descripción VARCHAR(255),
+    categoría_id INT NOT NULL,
+    FOREIGN KEY (categoría_id) REFERENCES Categorías (categoría_id)
 );
 
-CREATE TABLE Premios(
-    id BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(255) NOT NULL,
-    descripcion VARCHAR(255) NOT NULL
+
+CREATE TABLE Empleados (
+    empleado_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    puesto VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Productos(
-    id BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(255) NOT NULL,
-    precio BIGINT(10) UNSIGNED NOT NULL,
-    descripcion VARCHAR(255) NULL,
-    categoria_id BIGINT(20) UNSIGNED NOT NULL,
-    CONSTRAINT fk_categoriaProducto FOREIGN KEY (categoria_id) REFERENCES Categorias(id)
+
+CREATE TABLE Ventas (
+    venta_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    producto_id INT NOT NULL,
+    cantidad INT NOT NULL,
+    fecha DATE NOT NULL,
+    empleado_id INT NOT NULL,
+    FOREIGN KEY (producto_id) REFERENCES Productos (producto_id),
+    FOREIGN KEY (empleado_id) REFERENCES Empleados (empleado_id)
 );
 
-CREATE TABLE Ventas(
-    id BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    producto_id BIGINT(20) UNSIGNED NOT NULL,
-    cantidad BIGINT(10) UNSIGNED NOT NULL,
-    fecha TIMESTAMP NOT NULL,
-    empleado_id BIGINT(20) UNSIGNED NOT NULL,
-    CONSTRAINT fk_ventasProducto FOREIGN KEY (producto_id) REFERENCES Productos(id),
-    CONSTRAINT fk_ventasEmpleado FOREIGN KEY (empleado_id) REFERENCES Empleados(id)
+
+CREATE TABLE RegistroVentasEmpleado (
+    registro_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    empleado_id INT NOT NULL,
+    total_ventas INT NOT NULL,
+    FOREIGN KEY (empleado_id) REFERENCES Empleados (empleado_id)
 );
 
-CREATE TABLE RegistroVentasEmpleado(
-    id BIGINT(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    empleado_id BIGINT(20) UNSIGNED NOT NULL,
-    total_ventas BIGINT(20) UNSIGNED NOT NULL,
-    CONSTRAINT fk_registroEmpleado FOREIGN KEY (empleado_id) REFERENCES Empleados(id)
+
+CREATE TABLE CategoríasPremios (
+    categoría_premio_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripción VARCHAR(255)
+);
+
+
+CREATE TABLE TipoPremios (
+    tipo_premio_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripción VARCHAR(255)
+);
+
+CREATE TABLE Premios (
+    premio_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripción VARCHAR(255),
+    tipo_premio_id INT NOT NULL,
+    categoría_premio_id INT NOT NULL,
+    FOREIGN KEY (tipo_premio_id) REFERENCES TipoPremios (tipo_premio_id),
+    FOREIGN KEY (categoría_premio_id) REFERENCES CategoríasPremios (categoría_premio_id)
+);
+
+
+-- Crear la tabla "EmpleadosPremios" (tabla de relación muchos a muchos)
+CREATE TABLE EmpleadosPremios (
+    empleado_id INT NOT NULL,
+    premio_id INT NOT NULL,
+    fecha DATE NOT NULL,
+    FOREIGN KEY (empleado_id) REFERENCES Empleados (empleado_id),
+    FOREIGN KEY (premio_id) REFERENCES Premios (premio_id),
+    PRIMARY KEY (empleado_id, premio_id) -- Clave primaria compuesta por ambos campos
 );
 
