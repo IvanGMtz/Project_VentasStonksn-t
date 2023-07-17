@@ -78,3 +78,5 @@ El desarrollo de stonksn't se llevará a cabo en varias etapas:
 - La tabla "Ventas" tiene una relación de muchos a uno (Many-to-One) con la tabla "Empleados". El campo "empleado_id" en la tabla "Ventas" es una FOREIGN KEY que referencia el "empleado_id" en la tabla "Empleados".
 - La tabla "RegistroVentasEmpleado" tiene una relación de uno a uno (One-to-One) con la tabla "Empleados". El campo "empleado_id" en la tabla "RegistroVentasEmpleado" es una FOREIGN KEY que referencia el "empleado_id" en la tabla "Empleados".
 - La tabla "RegistroVentasEmpleado" tiene una relación de muchos a uno (Many-to-One) con la tabla "Premios". El campo "premio_id" en la tabla "RegistroVentasEmpleado" es una FOREIGN KEY que referencia el "premio_id" en la tabla "Premios".
+
+<img src="./img/EsquemaDataBase.png" alt="Database" style="zoom:33%;" />
