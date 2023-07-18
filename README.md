@@ -32,7 +32,7 @@ El desarrollo de stonksn't se llevará a cabo en varias etapas:
    - Se implementarán las rutas y controladores para las operaciones CRUD en las tablas de la base de datos.
    - Se realizarán pruebas exhaustivas para garantizar la funcionalidad correcta del backend.
 2. Base de datos MySQL:
-   - Se creará una base de datos en MySQL para almacenar la información de los productos, categorías, ventas, empleados, premios y registro de ventas de empleados.
+   - Se creará una base de datos en MySQL para almacenar la información de los productos, categorías, ventas, empleados, premios, categoría de premio, tipo de premio y registro de ventas de empleados.
 
 ## Descripción del Proyecto
 
@@ -40,21 +40,21 @@ El sistema "stonksn't" se basa en el análisis estadístico de productos y la pr
 
 ### Tablas de la Base de Datos
 
-1. **Categorías:** Almacena las categorías de los productos.
+1. **Categoría:** Almacena las categorías de los productos.
    - `categoría_id` (PRIMARY KEY): Identificador único de la categoría.
    - `nombre`: Nombre de la categoría.
    - `descripción`: Descripción de la categoría.
-2. **Productos:** Contiene la información de los productos vendidos.
+2. **Producto:** Contiene la información de los productos vendidos.
    - `producto_id` (PRIMARY KEY): Identificador único del producto.
    - `nombre`: Nombre del producto.
    - `precio`: Precio del producto.
    - `descripción`: Descripción del producto.
    - `categoría_id` (FOREIGN KEY): Clave foránea que referencia la categoría del producto.
-3. **Empleados:** Guarda la información de los empleados de la empresa.
+3. **Empleado:** Guarda la información de los empleados de la empresa.
    - `empleado_id` (PRIMARY KEY): Identificador único del empleado.
    - `nombre`: Nombre del empleado.
    - `puesto`: Puesto o cargo del empleado en la empresa.
-4. **Ventas:** Registra las ventas realizadas.
+4. **Venta:** Registra las ventas realizadas.
    - `venta_id` (PRIMARY KEY): Identificador único de la venta.
    - `producto_id` (FOREIGN KEY): Clave foránea que referencia el producto vendido.
    - `cantidad`: Cantidad de productos vendidos.
@@ -64,21 +64,21 @@ El sistema "stonksn't" se basa en el análisis estadístico de productos y la pr
    - `registro_id` (PRIMARY KEY): Identificador único del registro.
    - `empleado_id` (FOREIGN KEY): Clave foránea que referencia al empleado.
    - `total_ventas`: Total de ventas realizadas por el empleado.
-6. **Premios:** Registra los premios otorgados a los empleados.
+6. **Premio:** Registra los premios otorgados a los empleados.
    - `premio_id` (PRIMARY KEY): Identificador único del premio.
    - `nombre`: Nombre del premio.
    - `descripción`: Descripción del premio.
    - `tipo_premio_id` (FOREIGN KEY): Clave foránea que referencia el tipo de premio.
    - `categoría_premio_id` (FOREIGN KEY): Clave foránea que referencia la categoría del premio.
-7. **CategoríasPremios:** Almacena las categorías de premios.
+7. **CategoríaPremio:** Almacena las categorías de premios.
    - `categoría_premio_id` (PRIMARY KEY): Identificador único de la categoría de premio.
    - `nombre`: Nombre de la categoría de premio.
    - `descripción`: Descripción de la categoría de premio.
-8. **TipoPremios:** Registra los tipos de premios (incentivo económico o no económico).
+8. **TipoPremio:** Registra los tipos de premios (incentivo económico o no económico).
    - `tipo_premio_id` (PRIMARY KEY): Identificador único del tipo de premio.
    - `nombre`: Nombre del tipo de premio.
    - `descripción`: Descripción del tipo de premio.
-9. **EmpleadosPremios:** Tabla de relación muchos a muchos que asocia empleados con los premios que han recibido.
+9. **EmpleadoPremio:** Tabla de relación muchos a muchos que asocia empleados con los premios que han recibido.
    - `empleado_id` (PRIMARY KEY, FOREIGN KEY): Identificador único del empleado que recibió el premio.
    - `premio_id` (PRIMARY KEY, FOREIGN KEY): Identificador único del premio otorgado al empleado.
    - `fecha`: Fecha en la que se otorgó el premio al empleado.
