@@ -6,81 +6,70 @@ Ventas stonksn't es un proyecto de seguimiento de ventas diseñado para empresas
 
 ## Objetivo General
 
-El objetivo general de ventas stonksn't es ofrecer una plataforma fácil de usar para que las empresas puedan registrar y hacer un seguimiento de sus ventas de manera efectiva. La aplicación permitirá a los usuarios gestionar los productos, clientes, ventas y generar estadísticas de ventas. Además, se premiará a los empleados con grandes cantidades de ventas y se llevará un seguimiento de aquellos con ventas bajas.
+El objetivo del proyecto es desarrollar un sistema de gestión de estadísticas de productos y premiación para empleados en empresas pequeñas. El sistema permitirá realizar un seguimiento de las ventas de productos, generar estadísticas individuales y por categorías, y otorgar premios a los empleados que logren grandes cantidades de ventas, fomentando la motivación y reconocimiento del personal.
 
-## Objetivos Específicos
+## Objetivo Específico
 
-- Permitir el registro de ventas, incluyendo detalles como el producto vendido, la cantidad y la fecha.
-- Facilitar la gestión de productos y categorías de productos.
-- Generar informes y estadísticas detallados sobre las ventas por producto y categoría.
-- Premiar a los empleados con grandes cantidades de ventas.
-- Llevar un seguimiento de los empleados con ventas bajas.
-
-## Tecnologías Utilizadas
-
-- Backend: Node.js, Express
-- Base de Datos: MySQL
-- Frontend: React
-
-## Desarrollo
-
-El desarrollo de stonksn't se llevará a cabo en varias etapas:
-
-1. Backend:
-   - Se utilizará Node.js y Express para crear el servidor y la API RESTful.
-   - Se establecerá una conexión con la base de datos MySQL para almacenar y recuperar los datos necesarios.
-   - Se implementarán las rutas y controladores para las operaciones CRUD en las tablas de la base de datos.
-   - Se realizarán pruebas exhaustivas para garantizar la funcionalidad correcta del backend.
-2. Base de datos MySQL:
-   - Se creará una base de datos en MySQL para almacenar la información de los productos, categorías, ventas, empleados, premios, categoría de premio, tipo de premio y registro de ventas de empleados.
+El objetivo específico del sistema es proporcionar a las empresas pequeñas una herramienta eficiente y fácil de usar para analizar y mejorar sus ventas mediante el seguimiento y análisis de estadísticas de productos y el reconocimiento de los empleados con mejores desempeños.
 
 ## Descripción del Proyecto
 
-El sistema "stonksn't" se basa en el análisis estadístico de productos y la premiación a empleados destacados. El sistema consta de las siguientes entidades principales:
+El sistema se basa en el análisis estadístico de productos y la premiación a empleados destacados. El sistema consta de las siguientes entidades principales:
 
 ### Tablas de la Base de Datos
 
-1. **Categoría:** Almacena las categorías de los productos.
-   - `categoría_id` (PRIMARY KEY): Identificador único de la categoría.
+1. **Categoria:** Almacena las categorías de los productos.
+   - `id` (PRIMARY KEY): Identificador único de la categoría.
    - `nombre`: Nombre de la categoría.
-   - `descripción`: Descripción de la categoría.
+   - `descripcion`: Descripción de la categoría.
 2. **Producto:** Contiene la información de los productos vendidos.
-   - `producto_id` (PRIMARY KEY): Identificador único del producto.
+   - `id` (PRIMARY KEY): Identificador único del producto.
    - `nombre`: Nombre del producto.
    - `precio`: Precio del producto.
-   - `descripción`: Descripción del producto.
-   - `categoría_id` (FOREIGN KEY): Clave foránea que referencia la categoría del producto.
+   - `descripcion`: Descripción del producto.
+   - `categoria_id` (FOREIGN KEY): Clave foránea que referencia la categoría del producto.
 3. **Empleado:** Guarda la información de los empleados de la empresa.
-   - `empleado_id` (PRIMARY KEY): Identificador único del empleado.
+   - `id` (PRIMARY KEY): Identificador único del empleado.
    - `nombre`: Nombre del empleado.
    - `puesto`: Puesto o cargo del empleado en la empresa.
 4. **Venta:** Registra las ventas realizadas.
-   - `venta_id` (PRIMARY KEY): Identificador único de la venta.
-   - `producto_id` (FOREIGN KEY): Clave foránea que referencia el producto vendido.
-   - `cantidad`: Cantidad de productos vendidos.
+   - `id` (PRIMARY KEY): Identificador único de la venta.
    - `fecha`: Fecha de la venta.
    - `empleado_id` (FOREIGN KEY): Clave foránea que referencia al empleado que realizó la venta.
-5. **RegistroVentasEmpleado:** Almacena el total de ventas realizadas por cada empleado.
-   - `registro_id` (PRIMARY KEY): Identificador único del registro.
-   - `empleado_id` (FOREIGN KEY): Clave foránea que referencia al empleado.
-   - `total_ventas`: Total de ventas realizadas por el empleado.
+   - `cliente_id` (FOREIGN KEY): Clave foránea que referencia al cliente relacionado con la venta.
+   - `modo_pago_id` (FOREIGN KEY): Clave foránea que referencia el modo de pago utilizado.
+5. **DetalleVenta:** Almacena el detalle de cada venta realizada.
+   - `id` (PRIMARY KEY): Identificador único del detalle de venta.
+   - `venta_id` (FOREIGN KEY): Clave foránea que referencia la venta a la que pertenece el detalle.
+   - `producto_id` (FOREIGN KEY): Clave foránea que referencia el producto vendido.
+   - `cantidad`: Cantidad de productos vendidos.
+   - `precio_unitario`: Precio unitario del producto en la venta.
 6. **Premio:** Registra los premios otorgados a los empleados.
-   - `premio_id` (PRIMARY KEY): Identificador único del premio.
+   - `id` (PRIMARY KEY): Identificador único del premio.
    - `nombre`: Nombre del premio.
-   - `descripción`: Descripción del premio.
+   - `descripcion`: Descripción del premio.
    - `tipo_premio_id` (FOREIGN KEY): Clave foránea que referencia el tipo de premio.
-   - `categoría_premio_id` (FOREIGN KEY): Clave foránea que referencia la categoría del premio.
-7. **CategoríaPremio:** Almacena las categorías de premios.
-   - `categoría_premio_id` (PRIMARY KEY): Identificador único de la categoría de premio.
+   - `categoria_premio_id` (FOREIGN KEY): Clave foránea que referencia la categoría del premio.
+7. **CategoriaPremio:** Almacena las categorías de premios.
+   - `id` (PRIMARY KEY): Identificador único de la categoría de premio.
    - `nombre`: Nombre de la categoría de premio.
-   - `descripción`: Descripción de la categoría de premio.
+   - `descripcion`: Descripción de la categoría de premio.
 8. **TipoPremio:** Registra los tipos de premios (incentivo económico o no económico).
-   - `tipo_premio_id` (PRIMARY KEY): Identificador único del tipo de premio.
+   - `id` (PRIMARY KEY): Identificador único del tipo de premio.
    - `nombre`: Nombre del tipo de premio.
-   - `descripción`: Descripción del tipo de premio.
-9. **EmpleadoPremio:** Tabla de relación muchos a muchos que asocia empleados con los premios que han recibido.
-   - `empleado_id` (PRIMARY KEY, FOREIGN KEY): Identificador único del empleado que recibió el premio.
-   - `premio_id` (PRIMARY KEY, FOREIGN KEY): Identificador único del premio otorgado al empleado.
-   - `fecha`: Fecha en la que se otorgó el premio al empleado.
+   - `descripcion`: Descripción del tipo de premio.
+9. **Cliente:** Almacena la información de los clientes relacionados con las ventas.
+   - `id` (PRIMARY KEY): Identificador único del cliente.
+   - `nombre`: Nombre del cliente.
+   - `correo`: Correo electrónico del cliente.
+   - `telefono`: Número de teléfono del cliente.
+10. **ModoPago:** Registra los modos de pago utilizados en las ventas.
+    - `id` (PRIMARY KEY): Identificador único del modo de pago.
+    - `nombre`: Nombre del modo de pago.
+    - `descripcion`: Descripción del modo de pago.
+11. **EmpleadoPremio:** Tabla de relación muchos a muchos que asocia empleados con los premios que han recibido.
+    - `empleado_id` (PRIMARY KEY, FOREIGN KEY): Identificador único del empleado que recibió el premio.
+    - `premio_id` (PRIMARY KEY, FOREIGN KEY): Identificador único del premio otorgado al empleado.
+    - `fecha`: Fecha en la que se entregó el premio al empleado.
 
 <img src="./img/DatabaseStonksnt.png" alt="Database" style="zoom:33%;" />
