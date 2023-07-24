@@ -1,81 +1,88 @@
 CREATE DATABASE databaseStonksnt;
-
 USE databaseStonksnt;
 
-CREATE TABLE Categorías (
-    categoría_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    descripción VARCHAR(255)
+CREATE TABLE Categoria (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  descripcion TEXT
 );
 
-
-CREATE TABLE Productos (
-    producto_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    precio DECIMAL(10, 2) NOT NULL,
-    descripción VARCHAR(255),
-    categoría_id INT NOT NULL,
-    FOREIGN KEY (categoría_id) REFERENCES Categorías (categoría_id)
+CREATE TABLE Producto (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  precio DECIMAL(10, 2) NOT NULL,
+  descripcion TEXT,
+  categoria_id INT NOT NULL,
+  FOREIGN KEY (categoria_id) REFERENCES Categoria(id)
 );
 
-
-CREATE TABLE Empleados (
-    empleado_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    puesto VARCHAR(100) NOT NULL
+CREATE TABLE Empleado (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  puesto VARCHAR(100) NOT NULL
 );
 
-
-CREATE TABLE Ventas (
-    venta_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    producto_id INT NOT NULL,
-    cantidad INT NOT NULL,
-    fecha DATE NOT NULL,
-    empleado_id INT NOT NULL,
-    FOREIGN KEY (producto_id) REFERENCES Productos (producto_id),
-    FOREIGN KEY (empleado_id) REFERENCES Empleados (empleado_id)
+CREATE TABLE CategoriaPremio (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  descripcion TEXT
 );
 
-
-CREATE TABLE RegistroVentasEmpleado (
-    registro_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    empleado_id INT NOT NULL,
-    total_ventas INT NOT NULL,
-    FOREIGN KEY (empleado_id) REFERENCES Empleados (empleado_id)
+CREATE TABLE TipoPremio (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  descripcion TEXT
 );
 
-
-CREATE TABLE CategoríasPremios (
-    categoría_premio_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    descripción VARCHAR(255)
+CREATE TABLE Cliente (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  correo VARCHAR(100) NOT NULL,
+  telefono VARCHAR(15)
 );
 
-
-CREATE TABLE TipoPremios (
-    tipo_premio_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    descripción VARCHAR(255)
+CREATE TABLE ModoPago (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  descripcion TEXT
 );
 
-CREATE TABLE Premios (
-    premio_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    descripción VARCHAR(255),
-    tipo_premio_id INT NOT NULL,
-    categoría_premio_id INT NOT NULL,
-    FOREIGN KEY (tipo_premio_id) REFERENCES TipoPremios (tipo_premio_id),
-    FOREIGN KEY (categoría_premio_id) REFERENCES CategoríasPremios (categoría_premio_id)
+CREATE TABLE Venta (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  fecha DATE NOT NULL,
+  empleado_id INT NOT NULL,
+  cliente_id INT NOT NULL,
+  modo_pago_id INT NOT NULL,
+  FOREIGN KEY (empleado_id) REFERENCES Empleado(id),
+  FOREIGN KEY (cliente_id) REFERENCES Cliente(id),
+  FOREIGN KEY (modo_pago_id) REFERENCES ModoPago(id)
 );
 
-
--- Crear la tabla "EmpleadosPremios" (tabla de relación muchos a muchos)
-CREATE TABLE EmpleadosPremios (
-    empleado_id INT NOT NULL,
-    premio_id INT NOT NULL,
-    fecha DATE NOT NULL,
-    FOREIGN KEY (empleado_id) REFERENCES Empleados (empleado_id),
-    FOREIGN KEY (premio_id) REFERENCES Premios (premio_id),
-    PRIMARY KEY (empleado_id, premio_id) -- Clave primaria compuesta por ambos campos
+CREATE TABLE DetalleVenta (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  venta_id INT NOT NULL,
+  producto_id INT NOT NULL,
+  cantidad INT NOT NULL,
+  precio_unitario DECIMAL(10, 2) NOT NULL,
+  FOREIGN KEY (venta_id) REFERENCES Venta(id),
+  FOREIGN KEY (producto_id) REFERENCES Producto(id)
 );
 
+CREATE TABLE Premio (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  descripcion TEXT,
+  tipo_premio_id INT NOT NULL,
+  categoria_premio_id INT NOT NULL,
+  FOREIGN KEY (tipo_premio_id) REFERENCES TipoPremio(id),
+  FOREIGN KEY (categoria_premio_id) REFERENCES CategoriaPremio(id)
+);
+
+CREATE TABLE EmpleadoPremio (
+  empleado_id INT NOT NULL,
+  premio_id INT NOT NULL,
+  fecha DATE NOT NULL,
+  PRIMARY KEY (empleado_id, premio_id),
+  FOREIGN KEY (empleado_id) REFERENCES Empleado(id),
+  FOREIGN KEY (premio_id) REFERENCES Premio(id)
+);
