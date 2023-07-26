@@ -3,8 +3,9 @@ import { SignJWT, jwtVerify } from 'jose';
 import express from 'express';
 import 'reflect-metadata';
 import {plainToClass, classToPlain } from 'class-transformer';
-import {storageCategory} from '../controller/storageCategory.js'
-import {storageProducts} from '../controller/storageProducts.js'
+import {storageCategory} from '../controller/storageCategory.js';
+import {storageProducts} from '../controller/storageProducts.js';
+import { storagePayMethod } from '../controller/storagePayMethod.js';
 const tokenJWT = express();
 const validateJWT = express();
 dotenv.config("../");
@@ -17,6 +18,9 @@ tokenJWT.use(async(req,res,next)=>{
             break;
         case 'producto':
                 inst = plainToClass(storageProducts, {}, { ignoreDecorators: true })
+            break;
+        case 'metodopago':
+                inst = plainToClass(storagePayMethod, {}, { ignoreDecorators: true })
             break;
         default:
             res.json({status: 406, message: "No se puede generar el token"});
