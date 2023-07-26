@@ -4,6 +4,7 @@ import express from 'express';
 import 'reflect-metadata';
 import {plainToClass, classToPlain } from 'class-transformer';
 import {storageCategory} from '../controller/storageCategory.js'
+import {storageProducts} from '../controller/storageProducts.js'
 const tokenJWT = express();
 const validateJWT = express();
 dotenv.config("../");
@@ -14,7 +15,9 @@ tokenJWT.use(async(req,res,next)=>{
         case 'categoria':
             inst = plainToClass(storageCategory, {}, { ignoreDecorators: true })
             break;
-
+        case 'producto':
+                inst = plainToClass(storageProducts, {}, { ignoreDecorators: true })
+            break;
         default:
             res.json({status: 406, message: "No se puede generar el token"});
             break;
