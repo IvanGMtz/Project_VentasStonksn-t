@@ -7,6 +7,7 @@ import {storageCategory} from '../controller/storageCategory.js';
 import {storageProducts} from '../controller/storageProducts.js';
 import { storagePayMethod } from '../controller/storagePayMethod.js';
 import { storageRewardType } from '../controller/storageRewardType.js';
+import { storageRewardCategory } from '../controller/storageRewardCategory.js';
 const tokenJWT = express();
 const validateJWT = express();
 dotenv.config("../");
@@ -25,6 +26,9 @@ tokenJWT.use(async(req,res,next)=>{
             break;
         case 'tipopremio':
                 inst = plainToClass(storageRewardType, {}, { ignoreDecorators: true })
+            break;
+        case 'categoriapremio':
+                inst = plainToClass(storageRewardCategory, {}, { ignoreDecorators: true })
             break;
         default:
             res.json({status: 406, message: "No se puede generar el token"});
