@@ -1,6 +1,6 @@
 import con from '../config/connection.js';
 import { Expose, Transform } from 'class-transformer';
-import { IsDefined, IsString } from 'class-validator';
+import { IsDefined, IsString, IsNumber } from 'class-validator';
 export class storageReward{
     @Expose({ name: 'id' })
     id: number;
@@ -12,35 +12,19 @@ export class storageReward{
     @Transform(({ value }) => { if(/^[a-zA-Z0-9\s]*$/.test(value)) return (value) ? value : "Sin descripción" ; else throw {status: 406, message: "El formato del parametro description no es correcto"};}, { toClassOnly: true })
     descripcion: string;
     @Expose({ name: 'id-reward-type' })
-    @Transform(({value})=>{
-        let data= /^[0-9]+$/g.test(value)
-        if(data && typeof value =="number"){
-            return Number(value);
-        }else if(value == null){
-            throw {status:422, message: "El parametro id-reward-type es obligatorio"}
-        }else{
-            throw {status:406, message:"Mira bien el tipo de dato o la sintaxis, error en id-reward-type"}
-        }
-    })
+    @IsNumber({}, {message: ()=>{throw {status:406, message:"El formato del parametro id-reward-type no es correcto"}}})
+    @IsDefined({message: ()=>{ throw {status:422, message: "El parametro id-reward-type es obligatorio"}}})
     tipo_premio_id: number; 
     @Expose({ name: 'id-reward-category' })
-    @Transform(({value})=>{
-        let data= /^[0-9]+$/g.test(value)
-        if(data && typeof value =="number"){
-            return Number(value);
-        }else if(value == null){
-            throw {status:422, message: "El parametro id-reward-category es obligatorio"}
-        }else{
-            throw {status:406, message:"Mira bien el tipo de dato o la sintaxis, error en id-reward-category"}
-        }
-    })
+    @IsNumber({}, {message: ()=>{throw {status:406, message:"El formato del parametro id-reward-category no es correcto"}}})
+    @IsDefined({message: ()=>{ throw {status:422, message: "El parametro id-reward-category es obligatorio"}}})
     categoria_premio_id: number; 
     constructor(
       id:number,
       nombre: string = "1",
       descripcion: string,
-      tipo_premio_id:number,
-      categoria_premio_id:number) {
+      tipo_premio_id:number = 0,
+      categoria_premio_id:number= 0) {
         this.id=id;
         this.nombre = nombre;
         this.descripcion = descripcion;
