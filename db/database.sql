@@ -79,10 +79,10 @@ CREATE TABLE premio (
 );
 
 CREATE TABLE empleadopremio (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   empleado_id INT NOT NULL,
   premio_id INT NOT NULL,
   fecha DATE NOT NULL,
-  PRIMARY KEY (empleado_id, premio_id),
   FOREIGN KEY (empleado_id) REFERENCES empleado(id),
   FOREIGN KEY (premio_id) REFERENCES premio(id)
 );
