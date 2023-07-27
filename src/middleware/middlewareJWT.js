@@ -10,6 +10,7 @@ import { storageRewardType } from '../controller/storageRewardType.js';
 import { storageRewardCategory } from '../controller/storageRewardCategory.js';
 import { storageReward } from '../controller/storageReward.js';
 import { storageEmployee } from '../controller/storageEmployee.js';
+import { storageRewardEmployee } from '../controller/storageRewardEmployee.js';
 const tokenJWT = express();
 const validateJWT = express();
 dotenv.config("../");
@@ -37,6 +38,9 @@ tokenJWT.use(async(req,res,next)=>{
             break;
         case 'empleado':
                 inst = plainToClass(storageEmployee, {}, { ignoreDecorators: true })
+            break;
+        case 'empleadopremio':
+                inst = plainToClass(storageRewardEmployee, {}, { ignoreDecorators: true })
             break;
         default:
             res.json({status: 406, message: "No se puede generar el token"});

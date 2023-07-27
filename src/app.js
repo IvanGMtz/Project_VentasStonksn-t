@@ -8,6 +8,7 @@ import appRewardType from './routers/rewardtype.js';
 import appRewardCategory from './routers/rewardcategory.js';
 import appReward from './routers/reward.js';
 import appEmployee from './routers/employee.js';
+import appRewardEmployee from './routers/rewardemployee.js';
 import appJWT from './routers/JWT.js';
 dotenv.config();
 const appExpress = express();
@@ -20,6 +21,7 @@ appExpress.use("/tipopremio", validateJWT, appRewardType);
 appExpress.use("/categoriapremio", validateJWT, appRewardCategory);
 appExpress.use("/premio", validateJWT, appReward);
 appExpress.use("/empleado", validateJWT, appEmployee);
+appExpress.use("/empleadopremio", validateJWT, appRewardEmployee);
 appExpress.use("/token", appJWT);
 
 let config = JSON.parse(process.env.MY_SERVER);
