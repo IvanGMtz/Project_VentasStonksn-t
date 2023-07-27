@@ -16,60 +16,141 @@ El objetivo específico del sistema es proporcionar a las empresas pequeñas una
 
 El sistema se basa en el análisis estadístico de productos y la premiación a empleados destacados. El sistema consta de las siguientes entidades principales:
 
-### Tablas de la Base de Datos
-
-1. **Categoria:** Almacena las categorías de los productos.
-   - `id` (PRIMARY KEY): Identificador único de la categoría.
-   - `nombre`: Nombre de la categoría.
-   - `descripcion`: Descripción de la categoría.
-2. **Producto:** Contiene la información de los productos vendidos.
-   - `id` (PRIMARY KEY): Identificador único del producto.
-   - `nombre`: Nombre del producto.
-   - `precio`: Precio del producto.
-   - `descripcion`: Descripción del producto.
-   - `categoria_id` (FOREIGN KEY): Clave foránea que referencia la categoría del producto.
-3. **Empleado:** Guarda la información de los empleados de la empresa.
-   - `id` (PRIMARY KEY): Identificador único del empleado.
-   - `nombre`: Nombre del empleado.
-   - `puesto`: Puesto o cargo del empleado en la empresa.
-4. **Venta:** Registra las ventas realizadas.
-   - `id` (PRIMARY KEY): Identificador único de la venta.
-   - `fecha`: Fecha de la venta.
-   - `empleado_id` (FOREIGN KEY): Clave foránea que referencia al empleado que realizó la venta.
-   - `cliente_id` (FOREIGN KEY): Clave foránea que referencia al cliente relacionado con la venta.
-   - `modo_pago_id` (FOREIGN KEY): Clave foránea que referencia el modo de pago utilizado.
-5. **DetalleVenta:** Almacena el detalle de cada venta realizada.
-   - `id` (PRIMARY KEY): Identificador único del detalle de venta.
-   - `venta_id` (FOREIGN KEY): Clave foránea que referencia la venta a la que pertenece el detalle.
-   - `producto_id` (FOREIGN KEY): Clave foránea que referencia el producto vendido.
-   - `cantidad`: Cantidad de productos vendidos.
-   - `precio_unitario`: Precio unitario del producto en la venta.
-6. **Premio:** Registra los premios otorgados a los empleados.
-   - `id` (PRIMARY KEY): Identificador único del premio.
-   - `nombre`: Nombre del premio.
-   - `descripcion`: Descripción del premio.
-   - `tipo_premio_id` (FOREIGN KEY): Clave foránea que referencia el tipo de premio.
-   - `categoria_premio_id` (FOREIGN KEY): Clave foránea que referencia la categoría del premio.
-7. **CategoriaPremio:** Almacena las categorías de premios.
-   - `id` (PRIMARY KEY): Identificador único de la categoría de premio.
-   - `nombre`: Nombre de la categoría de premio.
-   - `descripcion`: Descripción de la categoría de premio.
-8. **TipoPremio:** Registra los tipos de premios (incentivo económico o no económico).
-   - `id` (PRIMARY KEY): Identificador único del tipo de premio.
-   - `nombre`: Nombre del tipo de premio.
-   - `descripcion`: Descripción del tipo de premio.
-9. **Cliente:** Almacena la información de los clientes relacionados con las ventas.
-   - `id` (PRIMARY KEY): Identificador único del cliente.
-   - `nombre`: Nombre del cliente.
-   - `correo`: Correo electrónico del cliente.
-   - `telefono`: Número de teléfono del cliente.
-10. **ModoPago:** Registra los modos de pago utilizados en las ventas.
-    - `id` (PRIMARY KEY): Identificador único del modo de pago.
-    - `nombre`: Nombre del modo de pago.
-    - `descripcion`: Descripción del modo de pago.
-11. **EmpleadoPremio:** Tabla de relación muchos a muchos que asocia empleados con los premios que han recibido.
-    - `empleado_id` (PRIMARY KEY, FOREIGN KEY): Identificador único del empleado que recibió el premio.
-    - `premio_id` (PRIMARY KEY, FOREIGN KEY): Identificador único del premio otorgado al empleado.
-    - `fecha`: Fecha en la que se entregó el premio al empleado.
-
 <img src="./img/DatabaseStonksnt.png" alt="Database" style="zoom:33%;" />
+
+## Requerimientos
+
+El proyecto está desarrollado utilizando Node.js y MySQL, por lo que necesitarás lo siguiente para ejecutarlo:
+
+- Node.js ([https://nodejs.org](https://nodejs.org/)) - Verificar que la versión instalada sea compatible con las dependencias del proyecto.
+- MySQL ([https://www.mysql.com](https://www.mysql.com/)) - Se requiere una base de datos MySQL para almacenar la información del proyecto.
+
+## Instalación de la Base de Datos
+
+1. Descarga el proyecto desde GitHub y navega a la carpeta "db".
+2. Abre el archivo "database.sql" en tu cliente de MySQL para ejecutar el script y crear la base de datos "databaseStonksnt" junto con todas las tablas necesarias.
+3. A continuación, puedes cargar datos de ejemplo en la base de datos ejecutando el archivo "data.sql" en tu cliente de MySQL. Esto te proporcionará datos de muestra para trabajar con el sistema.
+
+## Configuración del archivo .env
+
+Antes de ejecutar el proyecto, asegúrate de configurar las variables de entorno en el archivo `.env` de la siguiente manera:
+
+```
+plaintextCopy code
+DB_HOST="nombre_del_host_de_la_base_de_datos"
+DB_USER="nombre_de_usuario_de_mysql"
+DB_PASSWORD="contraseña_de_usuario_de_mysql"
+DB_NAME="databaseStonksnt"
+MY_SERVER={"hostname":"120.0.0", "port":3000} 
+JWT_PRIVATE_KEY="Clave_privada_para_la_creación_del_token"
+```
+
+## Instalación y Configuración
+
+1. Clona el repositorio desde GitHub a tu directorio local.
+
+2. Asegúrate de tener Node.js y npm instalados en tu máquina.
+
+3. Ejecuta el siguiente comando en la terminal para instalar las dependencias necesarias:
+
+   ```
+   Copy code
+   npm install
+   ```
+
+4. Crea un archivo `.env` en la raíz del proyecto y configura las variables de entorno necesarias, como la conexión a la base de datos. Un ejemplo de cómo configurar el archivo `.env` se proporciona en el archivo `.env.example`.
+
+5. Ejecuta el siguiente comando para generar los DTO (Data Transfer Objects) necesarios:
+
+   ```
+   arduinoCopy code
+   npm run tsc
+   ```
+
+## Montar el Servidor
+
+Una vez configuradas las variables de entorno y generado los DTO, puedes iniciar el servidor con el siguiente comando:
+
+```
+arduinoCopy code
+npm run dev
+```
+
+## Generación del Token
+
+Antes de interactuar con los endpoints protegidos, debes generar un token de autenticación JWT para acceder a las funcionalidades protegidas. Puedes hacerlo mediante la siguiente petición GET:
+
+```
+bashCopy code
+GET http://localhost:5015/token?tabla=<nombre_tabla>
+```
+
+Sustituye `<nombre_tabla>` por el nombre de la tabla para la cual deseas generar el token (por ejemplo, "producto").
+
+## Endpoints Disponibles
+
+- A continuación, puedes utilizar los siguientes endpoints para interactuar con el sistema:
+  - `GET /categoria`: Obtiene todas las categorías de productos.
+  - `POST /categoria`: Crea una nueva categoría de productos. Campos obligatorios: `nombre`.
+  - `DELETE /categoria/:id`: Elimina una categoría existente por su ID.
+  - `GET /producto`: Obtiene todos los productos junto con sus categorías.
+  - `POST /producto`: Crea un nuevo producto. Campos obligatorios: `nombre`, `precio`, `descripcion`, `categoria_id`.
+  - `DELETE /producto/:id`: Elimina un producto existente por su ID.
+  - `GET /metodopago`: Obtiene todos los métodos de pago.
+  - `POST /metodopago`: Crea un nuevo método de pago. Campos obligatorios: `nombre`.
+  - `DELETE /metodopago/:id`: Elimina un método de pago existente por su ID.
+  - `GET /tipopremio`: Obtiene todos los tipos de premios.
+  - `POST /tipopremio`: Crea un nuevo tipo de premio. Campos obligatorios: `nombre`, `descripcion`.
+  - `DELETE /tipopremio/:id`: Elimina un tipo de premio existente por su ID.
+  - `GET /categoriapremio`: Obtiene todas las categorías de premios.
+  - `POST /categoriapremio`: Crea una nueva categoría de premios. Campos obligatorios: `nombre`, `descripcion`.
+  - `DELETE /categoriapremio/:id`: Elimina una categoría de premio existente por su ID.
+  - `GET /premio`: Obtiene todos los premios junto con sus tipos y categorías asociados.
+  - `POST /premio`: Crea un nuevo premio. Campos obligatorios: `nombre`, `descripcion`, `tipo_premio_id`, `categoria_premio_id`.
+  - `DELETE /premio/:id`: Elimina un premio existente por su ID.
+
+Nota: Para las operaciones POST, asegúrate de incluir los datos requeridos en el cuerpo de la solicitud como JSON.
+
+## Ejemplo de Uso
+
+Recomendamos utilizar la extensión ThunderClient en Visual Studio Code para interactuar con los endpoints del proyecto. Puedes enviar las solicitudes HTTP (GET, POST, DELETE) y visualizar las respuestas desde la interfaz de ThunderClient.
+
+Ejemplo de Uso con la Tabla "Productos":
+
+1. Genera un token JWT para acceder a los endpoints protegidos.
+
+2. Realiza una solicitud POST a la siguiente URL con los datos de un nuevo producto en el cuerpo de la solicitud:
+
+   ```
+   bashCopy code
+   POST http://localhost:5015/producto
+   ```
+
+   Cuerpo de la solicitud:
+
+   ```
+   jsonCopy code{
+     "nombre": "Teléfono Móvil",
+     "precio": 399.99,
+     "descripcion": "Un teléfono inteligente avanzado.",
+     "categoria_id": 1
+   }
+   ```
+
+3. La API responderá con el resultado de la operación y un mensaje de éxito si el producto fue creado correctamente.
+
+Recuerda que debes utilizar el token JWT en la cabecera de las solicitudes a los endpoints protegidos para autenticarte. También asegúrate de configurar las variables de entorno correctamente y seguir los pasos de instalación y configuración descritos anteriormente.
+
+## Agradecimientos
+
+Este proyecto ha sido posible gracias a las siguientes dependencias:
+
+- class-transformer
+- class-validator
+- dotenv
+- express
+- mysql2
+- jose
+- nodemon
+- reflect-metadata
+- typescript
