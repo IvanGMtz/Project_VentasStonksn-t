@@ -7,6 +7,7 @@ import appPayMethod from './routers/paymethod.js';
 import appRewardType from './routers/rewardtype.js';
 import appRewardCategory from './routers/rewardcategory.js';
 import appReward from './routers/reward.js';
+import appEmployee from './routers/employee.js';
 import appJWT from './routers/JWT.js';
 dotenv.config();
 const appExpress = express();
@@ -18,6 +19,7 @@ appExpress.use("/metodopago", validateJWT, appPayMethod);
 appExpress.use("/tipopremio", validateJWT, appRewardType);
 appExpress.use("/categoriapremio", validateJWT, appRewardCategory);
 appExpress.use("/premio", validateJWT, appReward);
+appExpress.use("/empleado", validateJWT, appEmployee);
 appExpress.use("/token", appJWT);
 
 let config = JSON.parse(process.env.MY_SERVER);
