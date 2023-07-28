@@ -79,6 +79,9 @@ GET http://127.0.0.1:3000/token?tabla=<nombre_tabla>
 
 Sustituye `<nombre_tabla>` por el nombre de la tabla para la cual deseas generar el token (por ejemplo, "producto").
 
+**Se debe crear un token por cada tabla a utilizar**
+Los token deben ser ingresados como HTTP Headers de tipo Authorization.
+
 ## Endpoints Disponibles
 
 ### `GET /categoria`
@@ -115,7 +118,7 @@ Cuerpo de la solicitud:
 
 ```json
 {
-  "nombre": "Hogar"
+  "name": "Hogar"
 }
 ```
 
@@ -123,8 +126,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "id": 3,
-  "nombre": "Hogar"
+  "status": 201,
+  "message": "Datos guardados"
 }
 ```
 
@@ -135,7 +138,6 @@ Elimina una categoría existente por su ID.
 Ejemplo de uso:
 
 ```
-bash
 DELETE http://127.0.0.1:3000/categoria/3
 ```
 
@@ -143,7 +145,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "message": "Categoría eliminada exitosamente."
+  "status": 201,
+  "message": "Datos eliminados"
 }
 ```
 
@@ -156,18 +159,18 @@ Ejemplo de respuesta:
 ```json
 [
   {
-    "id": 1,
+    "producto_id": 1,
     "nombre": "Teléfono Móvil",
     "precio": 399.99,
-    "descripcion": "Un teléfono inteligente avanzado.",
-    "categoria_nombre": "Electrónica"
+    "categoria": "Electrónica",
+    "descripcion": "Un teléfono inteligente avanzado."
   },
   {
-    "id": 2,
+    "producto_id": 2,
     "nombre": "Camiseta",
     "precio": 25.99,
-    "descripcion": "Una camiseta cómoda para el uso diario.",
-    "categoria_nombre": "Ropa"
+    "categoria": "Ropa",
+    "descripcion": "Una camiseta cómoda para el uso diario."
   },
   // Más productos...
 ]
@@ -187,10 +190,10 @@ Cuerpo de la solicitud:
 
 ```json
 {
-  "nombre": "Pantalla LED",
-  "precio": 199.99,
+  "name": "Pantalla LED",
+  "price": 199.99,
   "descripcion": "Una pantalla LED de alta definición.",
-  "categoria_id": 1
+  "id-categoria": 1
 }
 ```
 
@@ -198,11 +201,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "id": 3,
-  "nombre": "Pantalla LED",
-  "precio": 199.99,
-  "descripcion": "Una pantalla LED de alta definición.",
-  "categoria_nombre": "Electrónica"
+  "status": 201,
+  "message": "Datos guardados"
 }
 ```
 
@@ -220,7 +220,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "message": "Producto eliminado exitosamente."
+  "status": 201,
+  "message": "Datos eliminados"
 }
 ```
 
@@ -234,11 +235,13 @@ Ejemplo de respuesta:
 [
   {
     "id": 1,
-    "nombre": "Tarjeta de Crédito"
+    "nombre": "Tarjeta de Crédito",
+    "descripcion": "Pago con tarjeta de crédito"
   },
   {
     "id": 2,
-    "nombre": "PayPal"
+    "nombre": "PayPal",
+    "descripcion": "Sin descripción"
   },
   // Más métodos de pago...
 ]
@@ -258,7 +261,7 @@ Cuerpo de la solicitud:
 
 ```json
 {
-  "nombre": "Efectivo"
+  "name": "Efectivo"
 }
 ```
 
@@ -266,8 +269,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "id": 3,
-  "nombre": "Efectivo"
+  "status": 201,
+  "message": "Datos guardados"
 }
 ```
 
@@ -285,7 +288,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "message": "Método de pago eliminado exitosamente."
+  "status": 201,
+  "message": "Datos eliminados"
 }
 ```
 
@@ -325,7 +329,7 @@ Cuerpo de la solicitud:
 
 ```json
 {
-  "nombre": "Mejor Proyecto del Mes",
+  "name": "Mejor Proyecto del Mes",
   "descripcion": "Reconocimiento al mejor proyecto del mes."
 }
 ```
@@ -334,9 +338,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "id": 3,
-  "nombre": "Mejor Proyecto del Mes",
-  "descripcion": "Reconocimiento al mejor proyecto del mes."
+  "status": 201,
+  "message": "Datos guardados"
 }
 ```
 
@@ -354,7 +357,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "message": "Tipo de premio eliminado exitosamente."
+  "status": 201,
+  "message": "Datos eliminados"
 }
 ```
 
@@ -368,11 +372,13 @@ Ejemplo de respuesta:
 [
   {
     "id": 1,
-    "nombre": "Mejor Desarrollador"
+    "nombre": "Mejor Desarrollador",
+    "descripcion": "Sin descripción"
   },
   {
     "id": 2,
-    "nombre": "Trabajo en Equipo"
+    "nombre": "Trabajo en Equipo",
+    "descripcion": "Premios por destacado trabajo en equipo"
   },
   // Más categorías de premios...
 ]
@@ -392,7 +398,7 @@ Cuerpo de la solicitud:
 
 ```json
 {
-  "nombre": "Empleado del Mes",
+  "name": "Empleado del Mes",
   "descripcion": "Reconocimiento al empleado más destacado del mes."
 }
 ```
@@ -401,9 +407,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "id": 3,
-  "nombre": "Empleado del Mes",
-  "descripcion": "Reconocimiento al empleado más destacado del mes."
+  "status": 201,
+  "message": "Datos guardados"
 }
 ```
 
@@ -421,7 +426,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "message": "Categoría de premio eliminada exitosamente."
+  "status": 201,
+  "message": "Datos eliminados"
 }
 ```
 
@@ -434,18 +440,18 @@ Ejemplo de respuesta:
 ```json
 [
   {
-    "id": 1,
-    "nombre": "Bono Mensual",
-    "descripcion": "Bono económico mensual para el empleado destacado.",
-    "tipo_premio_nombre": "Incentivo Económico",
-    "categoria_premio_nombre": "Mejor Desarrollador"
+    "premio_id": 1,
+    "premio_nombre": "Bono Mensual",
+    "premio_descripcion": "Bono económico mensual para el empleado destacado.",
+    "tipo_premio": "Incentivo Económico",
+    "categoria_premio": "Mejor Desarrollador"
   },
   {
-    "id": 2,
-    "nombre": "Reconocimiento Especial",
+    "premio_id": 2,
+    "premio_nombre": "Reconocimiento Especial",
     "descripcion": "Reconocimiento especial por logros excepcionales.",
-    "tipo_premio_nombre": "Reconocimiento",
-    "categoria_premio_nombre": "Trabajo en Equipo"
+    "tipo_premio": "Reconocimiento",
+    "categoria_premio": "Trabajo en Equipo"
   },
   // Más premios...
 ]
@@ -465,10 +471,10 @@ Cuerpo de la solicitud:
 
 ```json
 {
-  "nombre": "Mejor Vendedor del Mes",
+  "name": "Mejor Vendedor del Mes",
   "descripcion": "Reconocimiento al mejor vendedor del mes.",
-  "tipo_premio_id": 1,
-  "categoria_premio_id": 1
+  "id-reward-type": 1,
+  "id-reward-category": 1
 }
 ```
 
@@ -476,11 +482,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "id": 3,
-  "nombre": "Mejor Vendedor del Mes",
-  "descripcion": "Reconocimiento al mejor vendedor del mes.",
-  "tipo_premio_nombre": "Incentivo Económico",
-  "categoria_premio_nombre": "Mejor Desarrollador"
+  "status": 201,
+  "message": "Datos guardados"
 }
 ```
 
@@ -498,7 +501,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "message": "Premio eliminado exitosamente."
+  "status": 201,
+  "message": "Datos eliminados"
 }
 ```
 
@@ -513,16 +517,12 @@ Ejemplo de respuesta:
   {
     "id": 1,
     "nombre": "Juan Pérez",
-    "edad": 30,
-    "puesto": "Desarrollador",
-    "fecha_ingreso": "2022-05-10"
+    "puesto": "Desarrollador"
   },
   {
     "id": 2,
     "nombre": "María López",
-    "edad": 28,
-    "puesto": "Vendedora",
-    "fecha_ingreso": "2021-11-15"
+    "puesto": "Vendedora"
   },
   // Más empleados...
 ]
@@ -542,10 +542,8 @@ Cuerpo de la solicitud:
 
 ```json
 {
-  "nombre": "Pedro Gómez",
-  "edad": 25,
-  "puesto": "Analista",
-  "fecha_ingreso": "2023-07-01"
+  "name": "Pedro Gómez",
+  "position": "Analista"
 }
 ```
 
@@ -553,11 +551,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "id": 3,
-  "nombre": "Pedro Gómez",
-  "edad": 25,
-  "puesto": "Analista",
-  "fecha_ingreso": "2023-07-01"
+  "status": 201,
+  "message": "Datos guardados"
 }
 ```
 
@@ -575,7 +570,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "message": "Empleado eliminado exitosamente."
+  "status": 201,
+  "message": "Datos eliminados"
 }
 ```
 
@@ -589,14 +585,14 @@ Ejemplo de respuesta:
 [
   {
     "id": 1,
-    "fecha": "2023-07-10",
-    "premio_nombre": "Bono Mensual",
+    "fecha": "2023-07-10T05:00:00.000Z",
+    "premio": "Bono Mensual",
     "empleado_nombre": "Juan Pérez"
   },
   {
     "id": 2,
-    "fecha": "2023-07-15",
-    "premio_nombre": "Reconocimiento Especial",
+    "fecha": "2023-07-15T05:00:00.000Z",
+    "premio": "Reconocimiento Especial",
     "empleado_nombre": "María López"
   },
   // Más registros de premios...
@@ -617,9 +613,9 @@ Cuerpo de la solicitud:
 
 ```json
 {
-  "empleado_id": 1,
-  "premio_id": 1,
-  "fecha": "2023-07-20"
+  "id-employee": 1,
+  "id-reward": 1,
+  "date": "2023-07-20"
 }
 ```
 
@@ -627,10 +623,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "id": 3,
-  "fecha": "2023-07-20",
-  "premio_nombre": "Bono Mensual",
-  "empleado_nombre": "Juan Pérez"
+  "status": 201,
+  "message": "Datos guardados"
 }
 ```
 
@@ -648,7 +642,8 @@ Respuesta de éxito:
 
 ```json
 {
-  "message": "Registro de premio eliminado exitosamente."
+  "status": 201,
+  "message": "Datos eliminados"
 }
 ```
 
