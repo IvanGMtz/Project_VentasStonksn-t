@@ -25,26 +25,63 @@ export class storageRewardEmployee{
     })
     fecha: string;
     
-    constructor(
-      id:number,
-      empleado_id: number = 0,
-      premio_id:number=0,
-      fecha: string="1999-12-24") {
-        this.id=id;
-        this.empleado_id=empleado_id;
-        this.premio_id=premio_id;
-        this.fecha=fecha;
-    }
+    constructor(collection:Partial<storageRewardEmployee>) {
+      Object.assign(this, collection)
+      this.empleado_id = 1;
+      this.premio_id=1;
+      this.fecha="1999-12-24";
+  }
 
-    set guardar(body:object){
-      con.query(/*sql*/`INSERT INTO empleadopremio SET ?`,
-      body,
-      (err, data, fields)=>{
-       console.log(err)
-       console.log(data)
-       console.log(fields)
-      });
+  async create() {
+    const cox = con.promise();
+    try {
+        const [result] = await cox.execute(/*sql*/`
+            INSERT INTO empleadopremio (empleado_id, premio_id, fecha)
+            VALUES (?, ?, ?)
+        `, [this.empleado_id, this.premio_id, this.fecha]);
+        this.id = result.insertId;
+        return this;
+    } catch (error) {
+        throw { status: 500, message: "Error al crear la Empleado-premio" };
     }
+}
+
+async update(id: number, empleado_id: number, premio_id: number, fecha:string) {
+  const cox = con.promise();
+  try {
+      const [result] = await cox.execute(/*sql*/`
+          UPDATE empleadopremio
+          SET empleado_id = ?, premio_id = ?, fecha=?
+          WHERE id = ?
+      `, [empleado_id, premio_id, fecha, id]);
+      if (result.affectedRows === 0) {
+          throw { status: 404, message: "Empleado-premio no encontrado" };
+      }
+      this.empleado_id = empleado_id;
+      this.premio_id = premio_id;
+      this.fecha=fecha;
+      return this;
+  } catch (error) {
+      throw { status: 500, message: "Error al actualizar Empleado-premio" };
+  }
+}
+
+async remove(id: number) {
+  const cox = con.promise();
+  try {
+      const [result] = await cox.execute(/*sql*/`
+          DELETE FROM empleadopremio
+          WHERE id = ?
+      `, [id]);
+      if (result.affectedRows === 0) {
+          throw { status: 404, message: "Empleado-premio no encontrado" };
+      }
+      return { message: "Empleado-premio eliminado correctamente" };
+  } catch (error) {
+      throw { status: 500, message: "Error al eliminar Empleado-premio" };
+  }
+}
+
     get all(){
       const cox = con.promise();
       return (async()=>{
@@ -57,17 +94,5 @@ export class storageRewardEmployee{
         `);
         return rows;
       })();
-    }
-
-    set eliminar(id: number) {
-      con.query(
-        /*sql*/ `DELETE FROM empleadopremio 
-                  WHERE id = ?`,
-        id,
-      (err, data, fields)=>{
-       console.log(err)
-       console.log(data)
-       console.log(fields)
-      });
     }
 }
