@@ -18,29 +18,65 @@ export class storageReward{
     @Expose({ name: 'id-reward-category' })
     @IsNumber({}, {message: ()=>{throw {status:406, message:"El formato del parametro id-reward-category no es correcto"}}})
     @IsDefined({message: ()=>{ throw {status:422, message: "El parametro id-reward-category es obligatorio"}}})
-    categoria_premio_id: number; 
-    constructor(
-      id:number,
-      nombre: string = "1",
-      descripcion: string,
-      tipo_premio_id:number = 0,
-      categoria_premio_id:number= 0) {
-        this.id=id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.tipo_premio_id=tipo_premio_id;
-        this.categoria_premio_id=categoria_premio_id;
+    categoria_premio_id: number;
+    constructor(collection:Partial<storageReward>) {
+          Object.assign(this, collection)
+          this.nombre = "0";
+          this.tipo_premio_id=1;
+          this.categoria_premio_id=1;
+      }
+    
+      async create() {
+        const cox = con.promise();
+        try {
+            const [result] = await cox.execute(/*sql*/`
+                INSERT INTO premio (nombre, descripcion, tipo_premio_id, categoria_premio_id)
+                VALUES (?, ?, ?, ?)
+            `, [this.nombre, this.descripcion, this.tipo_premio_id, this.categoria_premio_id]);
+            this.id = result.insertId;
+            return this;
+        } catch (error) {
+            throw { status: 500, message: "Error al crear premio" };
+        }
+    }
+    
+    async update(id: number, name: string, descripcion: string, id_reward_type:number, id_reward_category:number) {
+      const cox = con.promise();
+      try {
+          const [result] = await cox.execute(/*sql*/`
+              UPDATE premio
+              SET nombre = ?, descripcion = ?, tipo_premio_id = ?, categoria_premio_id = ?  
+              WHERE id = ?
+          `, [name, descripcion, id_reward_type, id_reward_category, id]);
+          if (result.affectedRows === 0) {
+              throw { status: 404, message: "Premio no encontrado" };
+          }
+          this.nombre = name;
+          this.descripcion = descripcion;
+          this.tipo_premio_id=id_reward_type;
+          this.categoria_premio_id=id_reward_category;
+          return this;
+      } catch (error) {
+          throw { status: 500, message: "Error al actualizar el premio" };
+      }
+    }
+    
+    async remove(id: number) {
+      const cox = con.promise();
+      try {
+          const [result] = await cox.execute(/*sql*/`
+              DELETE FROM premio
+              WHERE id = ?
+          `, [id]);
+          if (result.affectedRows === 0) {
+              throw { status: 404, message: "Premio no encontrado" };
+          }
+          return { message: "Premio eliminado correctamente" };
+      } catch (error) {
+          throw { status: 500, message: "Error al eliminar el premio" };
+      }
     }
 
-    set guardar(body:object){
-      con.query(/*sql*/`INSERT INTO premio SET ?`,
-      body,
-      (err, data, fields)=>{
-       console.log(err)
-       console.log(data)
-       console.log(fields)
-      });
-    }
     get all(){
       const cox = con.promise();
       return (async()=>{
@@ -57,17 +93,5 @@ export class storageReward{
                 `);
         return rows;
       })();
-    }
-
-    set eliminar(id: number) {
-      con.query(
-        /*sql*/ `DELETE FROM premio 
-                  WHERE id = ?`,
-        id,
-      (err, data, fields)=>{
-       console.log(err)
-       console.log(data)
-       console.log(fields)
-      });
     }
 }
