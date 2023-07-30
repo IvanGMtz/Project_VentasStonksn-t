@@ -2,17 +2,19 @@ import {appMiddlewareEmployee, appMiddlewareEmployeeData} from "../middleware/mi
 import {Router} from 'express';
 const appEmployee = Router();
 
-appEmployee.post("/", appMiddlewareEmployeeData, (req,res)=>{
-    req.body.guardar = JSON.parse(req.data);
-    res.json({status: 201, message: "Datos guardados"});
+appEmployee.post("/", appMiddlewareEmployeeData, async(req,res)=>{
+    res.send(await req.body.create())
 });
 appEmployee.get("/", appMiddlewareEmployee, async(req,res)=>{
     res.send(await req.body.all)
 });
 
-appEmployee.delete("/:id", appMiddlewareEmployee, (req,res)=>{
-    req.body.eliminar = req.params.id;
-    res.json({status: 201, message: "Datos eliminados"});
+appEmployee.delete("/:id", appMiddlewareEmployee, async(req,res)=>{
+    res.send(await req.body.remove(req.params.id))
+});
+
+appEmployee.put("/:id", appMiddlewareEmployee, async(req,res)=>{
+    res.send(await req.body.update(req.params.id, req.body.nombre, req.body.puesto)) 
 });
 
 export default appEmployee;
