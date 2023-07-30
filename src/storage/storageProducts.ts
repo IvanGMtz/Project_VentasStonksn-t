@@ -19,49 +19,76 @@ export class storageProducts{
     @IsNumber({}, {message: ()=>{throw {status:406, message:"El formato del parametro id-categoria no es correcto"}}})
     @IsDefined({message: ()=>{ throw {status:422, message: "El parametro id-categoria es obligatorio"}}})
     categoria_id: number;
-    constructor(
-      id:number,
-      nombre: string = "1",
-      precio:number=0,
-      descripcion: string,
-      categoria_id: number=0) {
-        this.id=id;
-        this.nombre = nombre;
-        this.precio=precio;
-        this.descripcion = descripcion;
-        this.categoria_id=categoria_id
-    }
+    constructor(collection:Partial<storageProducts>) {
+      Object.assign(this, collection)
+      this.nombre = "0";
+      this.precio=1;
+      this.categoria_id=1;
+  }
 
-    set guardar(body:object){
-      con.query(/*sql*/`INSERT INTO producto SET ?`,
-      body,
-      (err, data, fields)=>{
-       console.log(err)
-       console.log(data)
-       console.log(fields)
-      });
-    }
-    get all(){
-      const cox = con.promise();
+  get all(){
+    const cox = con.promise();
+    try {
       return (async()=>{
         const [rows, fields] = await cox.execute(/*sql*/`
-        SELECT p.id AS producto_id, p.nombre AS nombre, c.nombre AS categoria, p.descripcion AS descripcion
-        FROM producto AS p
-        INNER JOIN categoria AS c ON p.categoria_id = c.id; 
+        SELECT * 
+        FROM producto
         `);
         return rows;
       })();
-    }
+  } catch (error) {
+      throw { status: 500, message: "Error al obtener los productos" };
+  }
+  }
 
-    set eliminar(id: number) {
-      con.query(
-        /*sql*/ `DELETE FROM producto 
-                  WHERE id = ?`,
-        id,
-      (err, data, fields)=>{
-       console.log(err)
-       console.log(data)
-       console.log(fields)
-      });
+  async create() {
+    const cox = con.promise();
+    try {
+        const [result] = await cox.execute(/*sql*/`
+            INSERT INTO producto (nombre,precio, descripcion, categoria_id)
+            VALUES (?, ?, ?, ?)
+        `, [this.nombre,this.precio, this.descripcion, this.categoria_id]);
+        this.id = result.insertId;
+        return this;
+    } catch (error) {
+        throw { status: 500, message: "Error al crear el producto" };
     }
+}
+
+async update(id: number, name: string,price:number,descripcion: string,categoria_id:number) {
+  const cox = con.promise();
+  try {
+      const [result] = await cox.execute(/*sql*/`
+          UPDATE producto
+          SET nombre = ?,precio=?, descripcion = ?, categoria_id=?  
+          WHERE id = ?
+      `, [name,price, descripcion, categoria_id, id]);
+      if (result.affectedRows === 0) {
+          throw { status: 404, message: "Producto no encontrado" };
+      }
+      this.nombre = name;
+      this.precio=price;
+      this.descripcion = descripcion;
+      this.categoria_id=categoria_id;
+      return this;
+  } catch (error) {
+      throw { status: 500, message: "Error al actualizar el producto" };
+  }
+}
+
+async remove(id: number) {
+  const cox = con.promise();
+  try {
+      const [result] = await cox.execute(/*sql*/`
+          DELETE FROM producto
+          WHERE id = ?
+      `, [id]);
+      if (result.affectedRows === 0) {
+          throw { status: 404, message: "Producto no encontrado" };
+      }
+      return { message: "Producto eliminado correctamente" };
+  } catch (error) {
+      throw { status: 500, message: "Error al eliminar el producto" };
+  }
+}
 }
