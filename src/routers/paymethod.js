@@ -2,17 +2,19 @@ import {appMiddlewarePayMethod, appMiddlewarePayMethodData} from "../middleware/
 import {Router} from 'express';
 const appPayMethod = Router();
 
-appPayMethod.post("/", appMiddlewarePayMethodData, (req,res)=>{
-    req.body.guardar = JSON.parse(req.data);
-    res.json({status: 201, message: "Datos guardados"});
+appPayMethod.post("/", appMiddlewarePayMethodData, async(req,res)=>{
+    res.send(await req.body.create())
 });
 appPayMethod.get("/", appMiddlewarePayMethod, async(req,res)=>{
     res.send(await req.body.all)
 });
 
-appPayMethod.delete("/:id", appMiddlewarePayMethod, (req,res)=>{
-    req.body.eliminar = req.params.id;
-    res.json({status: 201, message: "Datos eliminados"});
+appPayMethod.delete("/:id", appMiddlewarePayMethod, async(req,res)=>{
+    res.send(await req.body.remove(req.params.id))
+});
+
+appPayMethod.put("/:id", appMiddlewarePayMethod, async(req,res)=>{
+    res.send(await req.body.update(req.params.id, req.body.nombre, req.body.descripcion)) 
 });
 
 export default appPayMethod;
