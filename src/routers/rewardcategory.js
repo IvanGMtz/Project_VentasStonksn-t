@@ -2,17 +2,19 @@ import {appMiddlewareRewardCategory, appMiddlewareRewardCategoryData} from "../m
 import {Router} from 'express';
 const appRewardCategory = Router();
 
-appRewardCategory.post("/", appMiddlewareRewardCategoryData, (req,res)=>{
-    req.body.guardar = JSON.parse(req.data);
-    res.json({status: 201, message: "Datos guardados"});
+appRewardCategory.post("/", appMiddlewareRewardCategoryData, async(req,res)=>{
+    res.send(await req.body.create())
 });
 appRewardCategory.get("/", appMiddlewareRewardCategory, async(req,res)=>{
     res.send(await req.body.all)
 });
 
-appRewardCategory.delete("/:id", appMiddlewareRewardCategory, (req,res)=>{
-    req.body.eliminar = req.params.id;
-    res.json({status: 201, message: "Datos eliminados"});
+appRewardCategory.delete("/:id", appMiddlewareRewardCategory, async(req,res)=>{
+    res.send(await req.body.remove(req.params.id))
+});
+
+appRewardCategory.put("/:id", appMiddlewareRewardCategory, async(req,res)=>{
+    res.send(await req.body.update(req.params.id, req.body.nombre, req.body.descripcion)) 
 });
 
 export default appRewardCategory;
